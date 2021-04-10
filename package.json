@@ -1,0 +1,24 @@
+{
+  "name": "nestjs-mockito",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "@nestjs/common": "^6.7.0 || ^7.0.0",
+    "@nestjs/core": "^6.7.0 || ^7.0.0",
+    "@nestjs/testing": "^6.7.0 || ^7.0.0",
+    "mock-nest-abstract": "^1.0.0",
+    "ts-mockito": "^2.0.0"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^7.6.15",
+    "@nestjs/core": "^7.6.15",
+    "@nestjs/testing": "^7.6.15",
+    "ts-mockito": "^2.6.1"
+  }
+}
