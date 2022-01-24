@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-mockito",
+  "name": "nestjs-auto-mockito",
   "version": "0.1.0",
   "description": "Module for nestjs modules auto mocking, using ts-mockito",
   "main": "index.js",
