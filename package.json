@@ -1,7 +1,7 @@
 {
   "name": "nestjs-mockito",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Module for nestjs modules auto mocking, using ts-mockito",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -11,12 +11,13 @@
     "eslint": "eslint \"src/**/*.ts\"",
     "eslint:fix": "npm run eslint -- --fix"
   },
-  "author": "",
+  "author": "MigasEu",
   "license": "ISC",
   "peerDependencies": {
     "@nestjs/common": "^6.7.0 || ^7.0.0",
     "@nestjs/core": "^6.7.0 || ^7.0.0",
     "@nestjs/testing": "^6.7.0 || ^7.0.0",
+    "nestjs-auto-mock": "^0.3.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.7",
     "ts-mockito": "^2.0.0"

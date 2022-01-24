@@ -1,7 +1,7 @@
 import { Abstract, ModuleMetadata, Type } from '@nestjs/common';
 import { MetadataScanner } from '@nestjs/core';
 import { TestingModule } from '@nestjs/testing';
-import { MockedModule, MockedModuleBuilder } from 'mock-nest-abstract';
+import { MockedModule, MockedModuleBuilder } from 'nestjs-auto-mock';
 import { spy } from 'ts-mockito';
 
 export type TypeOrToken<TInput = any> = Type<TInput> | Abstract<TInput> | string | symbol;
@@ -22,7 +22,7 @@ export class MockitoModule extends MockedModule<any, any> {
   }
 }
 
-export class MockitoModuleBuilder extends MockedModuleBuilder<any> {
+export class MockitoModuleBuilder extends MockedModuleBuilder<any, any> {
   constructor(protected mockMap: MockMap, metadataScanner: MetadataScanner, metadata: ModuleMetadata) {
     super(metadataScanner, metadata);
   }
