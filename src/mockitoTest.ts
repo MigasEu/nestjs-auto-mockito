@@ -1,45 +1,43 @@
-import {
-  ClassProvider,
-  FactoryProvider,
-  ModuleMetadata,
-  Provider,
-  Type,
-} from "@nestjs/common";
-import { MockedModuleMetadata, MockedTest } from "mock-nest-abstract";
-import { instance, mock } from "ts-mockito";
-import { MockitoModuleBuilder, MockMap, TypeOrToken } from "./mockitoModule";
-import { betterMock } from "./util";
+import { ClassProvider, FactoryProvider, ModuleMetadata, Provider, Type } from '@nestjs/common';
+import { MetadataScanner } from '@nestjs/core/metadata-scanner';
+import { MockedModuleMetadata, MockedTest } from 'mock-nest-abstract';
+import { instance } from 'ts-mockito';
+import { MockitoModuleBuilder, MockMap, TypeOrToken } from './mockitoModule';
+import { betterMock } from './util';
 
 export class MockitoTest extends MockedTest {
+  static mockedMetadataScanner = new MetadataScanner();
+
   static createMockedModule(
-    metadata: ModuleMetadata,
-    metadataToMock: MockedModuleMetadata
+    metadata: ModuleMetadata = {},
+    metadataToMock: MockedModuleMetadata = {},
+    deepModuleMocked = true,
   ): MockitoModuleBuilder {
-    const { mockMap, mockedMetadata } = MockitoTest.createMockedMetadata(
-      metadataToMock
-    );
+    const { mockMap, mockedMetadata } = MockitoTest.createMockedMetadata(metadataToMock, deepModuleMocked);
 
-    const parent = super.createTestingModule({
-      ...mockedMetadata,
+    const mergedMetadata: ModuleMetadata = {
       ...metadata,
-    });
+      providers: [...(mockedMetadata.providers ?? []), ...(metadata.providers ?? [])],
+    };
 
-    return Object.assign(parent, {
-      mockMap: mockMap,
-    } as MockitoModuleBuilder);
+    return new MockitoModuleBuilder(mockMap, MockitoTest.mockedMetadataScanner, mergedMetadata);
   }
 
   static createMockedMetadata(
     metadataToMock: MockedModuleMetadata,
+    deepModuleMocked = true,
   ): {
     mockedMetadata: ModuleMetadata;
     mockMap: MockMap;
   } {
     const mockMap: MockMap = new Map<TypeOrToken<any>, any>();
     const mockedMetadata: MockedModuleMetadata = {};
-    mockedMetadata.providers = metadataToMock.providers.map((provider) =>
-      MockitoTest.mockProvider(provider, mockMap)
-    );
+    const allProviders = [
+      ...MockedTest.providersFromModules(metadataToMock.imports ?? [], deepModuleMocked),
+      ...(metadataToMock.providers ?? []),
+    ];
+
+    mockedMetadata.providers = allProviders.map((provider) => MockitoTest.mockProvider(provider, mockMap));
 
     return {
       mockedMetadata,
@@ -47,30 +45,29 @@ export class MockitoTest extends MockedTest {
     };
   }
 
-  static mockProvider<T>(
-    providerToMock: Provider<T>,
-    mockMap: MockMap
-  ): Provider<T> {
+  static mockProvider<T>(providerToMock: Provider<T>, mockMap: MockMap): Provider<T> {
     const providerClass = providerToMock as ClassProvider;
     const providerFactory = providerToMock as FactoryProvider;
     const providerAsType = providerToMock as Type<any>;
 
-    if (typeof providerAsType === "function" || providerClass.useClass) {
+    let useValue: any;
+    if (typeof providerAsType === 'function' || providerClass.useClass) {
       const mocked = betterMock(providerClass.useClass || providerAsType);
+      useValue = instance(mocked);
       mockMap.set(providerClass.provide ?? providerAsType, mocked);
     }
 
     return {
       ...providerToMock,
-      useFactory:
-        providerFactory.useFactory &&
-        this.mockFactoryTransformer(providerFactory, mockMap),
+      provide: providerClass.provide ?? providerAsType,
+      useValue: useValue,
+      useFactory: providerFactory.useFactory && this.mockFactoryTransformer(providerFactory, mockMap),
     } as Provider;
   }
 
   static mockFactoryTransformer<T = any>(
     providerFactory: FactoryProvider,
-    mockMap: MockMap
+    mockMap: MockMap,
   ): (...args: any[]) => Promise<T> {
     return async (...args) => {
       const mocked = await providerFactory.useFactory(args);

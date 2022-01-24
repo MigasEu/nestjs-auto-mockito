@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "airbnb",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "prettier"],
+  "rules": {
+      "prettier/prettier": "error",
+      "@typescript-eslint/indent": [
+          "error",
+          2
+      ],
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "no-empty-function": "warn",
+      "no-useless-constructor": "off",
+      "max-classes-per-file": ["error", 5],
+      "max-len": ["error", 150],
+      "import/prefer-default-export": "off",
+      "import/no-default-export": "error",
+      "import/extensions": ["error", "never"]
+  }
+}
