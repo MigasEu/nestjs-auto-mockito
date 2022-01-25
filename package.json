@@ -1,8 +1,12 @@
 {
-  "name": "nestjs-auto-mockito",
-  "version": "0.1.0",
+  "name": "nestjs-auto-tsmockito",
+  "version": "0.2.0",
   "description": "Module for nestjs modules auto mocking, using ts-mockito",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",

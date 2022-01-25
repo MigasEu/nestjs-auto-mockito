@@ -62,6 +62,7 @@ export class MockitoTest extends MockedTest {
       provide: providerClass.provide ?? providerAsType,
       useValue: useValue,
       useFactory: providerFactory.useFactory && this.mockFactoryTransformer(providerFactory, mockMap),
+      useClass: undefined,
     } as Provider;
   }
 
