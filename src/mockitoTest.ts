@@ -2,6 +2,7 @@ import { ClassProvider, FactoryProvider, ModuleMetadata, Provider, Type } from '
 import { MetadataScanner } from '@nestjs/core/metadata-scanner';
 import { MockedModuleMetadata, MockedTest } from 'nestjs-auto-mock';
 import { instance } from 'ts-mockito';
+
 import { MockitoModuleBuilder, MockMap, TypeOrToken } from './mockitoModule';
 import { betterMock } from './util';
 
