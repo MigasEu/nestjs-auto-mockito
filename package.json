@@ -8,7 +8,7 @@
     "/dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier src/**/*.ts",
     "prettier:fix": "npm run prettier -- --write",
