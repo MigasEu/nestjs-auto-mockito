@@ -1,6 +1,6 @@
-/* eslint-disable class-methods-use-this */
 import { Module } from '@nestjs/common';
 import { when } from 'ts-mockito';
+
 import { MockitoTest } from '../src/mockitoTest';
 
 // TODO: turn this into unit tests
