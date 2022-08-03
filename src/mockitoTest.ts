@@ -9,12 +9,12 @@ import { betterMock } from './util';
 export class MockitoTest extends MockedTest {
   static mockedMetadataScanner = new MetadataScanner();
 
-  static async createMockedModule(
+  static createMockedModule(
     metadata: ModuleMetadata = {},
     metadataToMock: MockedModuleMetadata = {},
     deepModuleMocked = true,
-  ): Promise<MockitoModuleBuilder> {
-    const { mockMap, mockedMetadata } = await MockitoTest.createMockedMetadata(metadataToMock, deepModuleMocked);
+  ): MockitoModuleBuilder {
+    const { mockMap, mockedMetadata } = MockitoTest.createMockedMetadata(metadataToMock, deepModuleMocked);
 
     const mergedMetadata: ModuleMetadata = {
       ...metadata,
@@ -24,17 +24,17 @@ export class MockitoTest extends MockedTest {
     return new MockitoModuleBuilder(mockMap, MockitoTest.mockedMetadataScanner, mergedMetadata);
   }
 
-  static async createMockedMetadata(
+  static createMockedMetadata(
     metadataToMock: MockedModuleMetadata,
     deepModuleMocked = true,
-  ): Promise<{
+  ): {
     mockedMetadata: ModuleMetadata;
     mockMap: MockMap;
-  }> {
+  } {
     const mockMap: MockMap = new Map<TypeOrToken<any>, any>();
     const mockedMetadata: MockedModuleMetadata = {};
     const allProviders = [
-      ...(await MockedTest.providersFromModules(metadataToMock.imports ?? [], deepModuleMocked)),
+      ...MockedTest.providersFromModules(metadataToMock.imports ?? [], deepModuleMocked),
       ...(metadataToMock.providers ?? []),
     ];
 
