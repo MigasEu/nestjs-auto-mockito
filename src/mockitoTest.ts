@@ -1,49 +1,24 @@
 import { ClassProvider, FactoryProvider, ModuleMetadata, Provider, Type } from '@nestjs/common';
 import { MetadataScanner } from '@nestjs/core/metadata-scanner';
-import { MockedModuleMetadata, MockedTest } from 'nestjs-auto-mock';
+import { MockedModuleBuilder, MockedModuleMetadata, MockedTest, MockMap } from 'nestjs-auto-mock';
 import { instance } from 'ts-mockito';
 
-import { MockitoModuleBuilder, MockMap, TypeOrToken } from './mockitoModule';
+import { MockitoModuleBuilder } from './mockitoModule';
 import { betterMock } from './util';
 
 export class MockitoTest extends MockedTest {
   static mockedMetadataScanner = new MetadataScanner();
 
-  static createMockedModule(
+  static createMockitoModule(
     metadata: ModuleMetadata = {},
     metadataToMock: MockedModuleMetadata = {},
     deepModuleMocked = true,
   ): MockitoModuleBuilder {
-    const { mockMap, mockedMetadata } = MockitoTest.createMockedMetadata(metadataToMock, deepModuleMocked);
-
-    const mergedMetadata: ModuleMetadata = {
-      ...metadata,
-      providers: [...(mockedMetadata.providers ?? []), ...(metadata.providers ?? [])],
-    };
-
-    return new MockitoModuleBuilder(mockMap, MockitoTest.mockedMetadataScanner, mergedMetadata);
+    return super.createMockedModule<any, any>(metadata, metadataToMock, deepModuleMocked) as MockitoModuleBuilder;
   }
 
-  static createMockedMetadata(
-    metadataToMock: MockedModuleMetadata,
-    deepModuleMocked = true,
-  ): {
-    mockedMetadata: ModuleMetadata;
-    mockMap: MockMap;
-  } {
-    const mockMap: MockMap = new Map<TypeOrToken<any>, any>();
-    const mockedMetadata: MockedModuleMetadata = {};
-    const allProviders = [
-      ...MockedTest.providersFromModules(metadataToMock.imports ?? [], deepModuleMocked),
-      ...(metadataToMock.providers ?? []),
-    ];
-
-    mockedMetadata.providers = allProviders.map((provider) => MockitoTest.mockProvider(provider, mockMap));
-
-    return {
-      mockedMetadata,
-      mockMap,
-    };
+  static mockedModuleBuilderFactory(mockMap: MockMap, mergedMetadata: ModuleMetadata): MockedModuleBuilder<any, any> {
+    return new MockitoModuleBuilder(mockMap, MockitoTest.mockedMetadataScanner, mergedMetadata);
   }
 
   static mockProvider<T>(providerToMock: Provider<T>, mockMap: MockMap): Provider<T> {
