@@ -1,6 +1,6 @@
 {
   "name": "nestjs-auto-tsmockito",
-  "version": "0.4.1",
+  "version": "0.4.3",
   "description": "Module for nestjs modules auto mocking, using ts-mockito",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,7 +25,7 @@
     "nestjs-auto-mock": "^0.4.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.7 || ^7.0.0",
-    "ts-mockito": "^2.0.0"
+    "@johanblumenberg/ts-mockito": "^1.0.34"
   },
   "devDependencies": {
     "@types/node": "^16.0.0",

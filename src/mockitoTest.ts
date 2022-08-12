@@ -1,7 +1,7 @@
-import { ClassProvider, FactoryProvider, ModuleMetadata, Provider, Type } from '@nestjs/common';
+import { ClassProvider, ExistingProvider, FactoryProvider, ModuleMetadata, Provider, Type } from '@nestjs/common';
 import { MetadataScanner } from '@nestjs/core/metadata-scanner';
 import { MockedModuleBuilder, MockedModuleMetadata, MockedTest, MockMap } from 'nestjs-auto-mock';
-import { instance } from 'ts-mockito';
+import { instance, mock } from '@johanblumenberg/ts-mockito';
 
 import { MockitoModuleBuilder } from './mockitoModule';
 import { betterMock } from './util';
@@ -24,13 +24,17 @@ export class MockitoTest extends MockedTest {
   static mockProvider<T>(providerToMock: Provider<T>, mockMap: MockMap): Provider<T> {
     const providerClass = providerToMock as ClassProvider;
     const providerFactory = providerToMock as FactoryProvider;
+    const providerExisting = providerToMock as ExistingProvider;
     const providerAsType = providerToMock as Type<any>;
 
     let useValue: any;
     if (typeof providerAsType === 'function' || providerClass.useClass) {
-      const mocked = betterMock(providerClass.useClass || providerAsType);
+      const mocked = mock(providerClass.useClass || providerAsType);
       useValue = instance(mocked);
       mockMap.set(providerClass.provide ?? providerAsType, mocked);
+    }
+    if (providerExisting.useExisting && mockMap.get(providerExisting.useExisting)) {
+      mockMap.set(providerClass.provide, mockMap.get(providerExisting.useExisting));
     }
 
     return {
