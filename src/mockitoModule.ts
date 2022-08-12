@@ -2,7 +2,7 @@ import { ModuleMetadata } from '@nestjs/common';
 import { MetadataScanner } from '@nestjs/core';
 import { TestingModule } from '@nestjs/testing';
 import { MockedModule, MockedModuleBuilder, MockMap, TypeOrToken } from 'nestjs-auto-mock';
-import { spy } from 'ts-mockito';
+import { spy } from '@johanblumenberg/ts-mockito';
 
 export class MockitoModule extends MockedModule<any, any> {
   constructor(parent: TestingModule, protected mockMap: MockMap) {

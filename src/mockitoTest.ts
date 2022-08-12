@@ -1,7 +1,7 @@
 import { ClassProvider, FactoryProvider, ModuleMetadata, Provider, Type } from '@nestjs/common';
 import { MetadataScanner } from '@nestjs/core/metadata-scanner';
 import { MockedModuleBuilder, MockedModuleMetadata, MockedTest, MockMap } from 'nestjs-auto-mock';
-import { instance } from 'ts-mockito';
+import { instance, mock } from '@johanblumenberg/ts-mockito';
 
 import { MockitoModuleBuilder } from './mockitoModule';
 import { betterMock } from './util';
@@ -28,7 +28,7 @@ export class MockitoTest extends MockedTest {
 
     let useValue: any;
     if (typeof providerAsType === 'function' || providerClass.useClass) {
-      const mocked = betterMock(providerClass.useClass || providerAsType);
+      const mocked = mock(providerClass.useClass || providerAsType);
       useValue = instance(mocked);
       mockMap.set(providerClass.provide ?? providerAsType, mocked);
     }
